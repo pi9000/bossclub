@@ -26,10 +26,10 @@
                             <a href="{{ url('/promotion') }}" class="post-back btn-custom"><i
                                     class="fas fa-angle-left"></i> Back</a>
                             <div class="post-img">
-                                <img src="{{ $now->gambar }}" alt="">
+                                <img src="{{ env('AWS_URL') }}{{ $now->gambar }}" alt="">
                             </div>
                             <div class="post-title">{{ $now->judul }}</div>
-                            <div class="post-date"><span>Posted on: </span>2021-04-11 10:45:11</div>
+                            <div class="post-date"><span>Posted on: </span>{{ $now->created_at }}</div>
                             <div class="post-content">
                                 {!! $now->text !!}
                             </div>
