@@ -131,7 +131,7 @@ class MemberController extends Controller
             $username = preg_replace("/[^a-zA-Z0-9]+/", "", $request->username);
             $user = User::create([
                 'agent_id' => $request->agent_id,
-                'extplayer' => strtoupper($request->agent_id . random_string(5)),
+                'extplayer' => strtoupper($request->agent_id . random_string(4)),
                 'username' => strtolower($username),
                 'password' => Hash::make($request->password),
                 'nama_lengkap' => '-',
@@ -153,7 +153,7 @@ class MemberController extends Controller
             $username = preg_replace("/[^a-zA-Z0-9]+/", "", $request->username);
             $user = User::create([
                 'agent_id' => $request->agent_id,
-                'extplayer' => strtoupper($request->agent_id . random_string(5)),
+                'extplayer' => strtoupper($request->agent_id . random_string(4)),
                 'username' => strtolower($username),
                 'password' => Hash::make($request->password),
                 'nama_lengkap' => '-',

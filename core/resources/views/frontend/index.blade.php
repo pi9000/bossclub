@@ -416,7 +416,7 @@
                                     <a href="{{ route('promotiond',$promt->slug) }}">
                                         <div class="list-item">
                                             <div class="item-image">
-                                                <img src="{{ $promt->gambar }}" alt="">
+                                                <img src="{{ env('AWS_URL') }}{{ $promt->gambar }}" alt="">
                                             </div>
                                             <div class="item-context">
                                                 <h6>{{ $promt->judul }}.</h6>
@@ -725,7 +725,7 @@
                                     <a href="{{ route('promotiond',$promt->slug) }}">
                                         <div class="list-item">
                                             <div class="item-image">
-                                                <img src="{{ $promt->gambar }}" alt="">
+                                                <img src="{{ env('AWS_URL') }}{{ $promt->gambar }}" alt="">
                                             </div>
                                             <div class="item-context">
                                                 <h6>{{ $promt->judul }}.</h6>

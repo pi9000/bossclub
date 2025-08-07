@@ -164,7 +164,7 @@
                                 <a href="{{ route('promotiond', $promot->slug) }}">
                                     <div class="other-item">
                                         <div class="img">
-                                            <img src="{{ $promot->gambar }}" alt="">
+                                            <img src="{{ env('AWS_URL') }}{{ $promot->gambar }}" alt="">
                                         </div>
                                         <div class="content">
                                             <div class="title">{{ $promot->judul }}</div>

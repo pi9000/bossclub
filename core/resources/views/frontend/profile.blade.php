@@ -62,7 +62,7 @@
                                                                         </div>
                                                                         <div>
                                                                             <span
-                                                                                id="refferalCode">{{ $reff->reff_code }}</span>
+                                                                                id="refferalCode"></span>
                                                                             <div class="kyc-btn-grid">
                                                                                 <a href="#" id="copyReff"
                                                                                     class="btn-custom btn-custom-sm text-center">
