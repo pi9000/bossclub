@@ -103,7 +103,7 @@
                                             <button type="button" class="styled btn-sm active" id="navmanual">
                                                 Bank Transfer
                                             </button>
-                                            
+
                                             <button type="button" class="styled btn-sm" id="navfpx">
                                                 FPX Online
                                             </button>
@@ -970,7 +970,7 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $wdh->created_at }}</td>
-                                                        <td>{{ $wdh->transaksi }}</td>
+                                                        <td>{{ $wdh->transaksi }} {{ $wdh->metode == 'Main Wallet' ? $wdh->dari_bank : '' }}</td>
                                                         <td>MYR {{ number_format($wdh->total, 2) }}</td>
                                                         <td>
                                                             @if ($wdh->status == 'Pending')
