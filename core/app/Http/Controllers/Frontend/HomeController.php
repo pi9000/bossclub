@@ -220,7 +220,7 @@ class HomeController extends Controller
             $token  = env('TELEGRAM_BOT_TOKEN');
             $message = '<b>🆔🆔🆔 Request to Create APK ID </b>
 
-<b>Username</b> : <a href="' . auth()->user()->username . '</a>
+<b>Username</b> : <code>' . auth()->user()->username . '</code>
 <b>APK ID</b> : Save ID/Password in Member List.
 <b>Provider</b> : ' . $request->provider . '
 <b>Date</b> : ' . date('Y-m-d H:i:s') . '';
@@ -252,11 +252,11 @@ class HomeController extends Controller
                 return redirect()->back()->with('error', __('public.apk_min_transfer'));
             }
 
-            $chatID = env('TELEGRAM_CHAT_ID');
+            $chatID = general()->telegram_chat_id;
             $token  = env('TELEGRAM_BOT_TOKEN');
             $message = '<b>✅✅✅ Request Transfer Credit To Games</b>
 
-<b>Username</b> : <a href="' .  auth()->user()->username . '</a>
+<b>Username</b> : <code>' . auth()->user()->username . '</code>
 <b>Balance</b> : ' . number_format(auth()->user()->balance, 2) . '
 <b>Provider</b> : ' . $request->provider . '
 <b>Date</b> : ' . date('Y-m-d H:i:s') . '';
@@ -288,9 +288,6 @@ class HomeController extends Controller
                 $trans->id_user = auth()->user()->id;
                 $trans->username = auth()->user()->username;
                 $trans->save();
-
-                $end = new SeamlesWsController();
-                $end->withdraw(auth()->user()->extplayer, auth()->user()->balance);
                 return back()->with('success', __('public.apk_transfer_success'));
             }
         } else {
@@ -300,11 +297,11 @@ class HomeController extends Controller
                 return redirect()->back()->with('error', __('public.pend_trans'));
             }
 
-            $chatID = env('TELEGRAM_CHAT_ID');
+            $chatID = general()->telegram_chat_id;
             $token  = env('TELEGRAM_BOT_TOKEN');
             $message = '<b>‼️‼️‼️ Request Withdraw Balance To Main Wallet</b>
 
-<b>Username</b> : <a href="' . route('admin.members.list.details', auth()->user()->extplayer) . '">' . auth()->user()->username . '</a>
+<b>Username</b> : <code>' . auth()->user()->username . '</code>
 <b>Amount</b> : ' . number_format($request->amount, 2) . '
 <b>Provider</b> : ' . $request->provider . '
 <b>Date</b> : ' . date('Y-m-d H:i:s') . '';
