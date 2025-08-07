@@ -220,7 +220,6 @@ class TransactionController extends Controller
 
     public function withdraw(Request $request)
     {
-
         $deposit = DB::table('tb_transaksi')->where('id_user', auth()->user()->id)->where('agent_id', auth()->user()->agent_id)->where('transaksi', 'Top Up')->where('status', 'Sukses')->orderBy('created_at', 'desc')->first();
         if ($deposit->bonus != 'tanpabonus') {
             $bonus = DB::table('tb_bonus')->where('id', $deposit->bonus)->first();
@@ -239,6 +238,9 @@ class TransactionController extends Controller
         } elseif ($request->jumlah > auth()->user()->balance) {
             return redirect()->back()->with('error', __('public.insufficient_bal'));
         } else {
+            $user = User::find(auth()->user()->id);
+            $user->balance -= $request->jumlah;
+            $user->save();
             $trans = new Transaction();
             $trans->trx_id = getTrx();
             $trans->transaksi = 'Withdraw';
