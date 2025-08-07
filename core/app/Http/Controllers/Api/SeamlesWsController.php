@@ -13,10 +13,8 @@ class SeamlesWsController extends Controller
     public function getBalance2()
     {
         return response()->json([
-            'status' => true,
-            'msg' => 'true',
-            'balance' => number_format(auth()->user()->balance, 2),
-            'tt_amount' => number_format(auth()->user()->balance, 2),
+            'success' => true,
+            'balance' => auth()->user()->balance,
         ]);
     }
 

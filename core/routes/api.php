@@ -24,6 +24,3 @@ Route::namespace('Api')->group(function () {
 Route::namespace('Api')->group(function () {
     Route::post('gold_api', 'SeamlesWsController@gold_api')->name('gold_api');
 });
-
-
-

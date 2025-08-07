@@ -1711,8 +1711,7 @@
                         success: function(response) {
                             if (response.success == true) {
                                 $('span[name*=mainBalance]').text(Number(response.balance).toFixed(2));
-                                $('span[id=balance-common-total]').text(Number(response.balance).toFixed(
-                                    2));
+                                $('span[id=balance-common-total]').text(Number(response.balance).toFixed(2));
                             }
                         }
                     });
