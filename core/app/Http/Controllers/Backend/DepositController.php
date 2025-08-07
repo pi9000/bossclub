@@ -243,7 +243,9 @@ class DepositController extends Controller
                         $user->balance = $transaction->total;
                     }
                 } else {
-                    $user->balance += $transaction->total;
+                    if ($transaction->dari_bank != 'Main Balance') {
+                       $user->balance += $transaction->total;
+                    }
                 }
 
                 $user->save();
