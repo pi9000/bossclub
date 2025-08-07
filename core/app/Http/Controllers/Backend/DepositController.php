@@ -243,7 +243,7 @@ class DepositController extends Controller
                         $user->balance = $transaction->total;
                     }
                 } else {
-                    if ($transaction->dari_bank != 'Main Balance') {
+                    if ($transaction->metode != 'Main Wallet') {
                        $user->balance += $transaction->total;
                     }
                 }
