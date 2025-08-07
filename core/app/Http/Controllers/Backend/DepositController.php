@@ -117,7 +117,7 @@ class DepositController extends Controller
                     if ($bonust > $bonus->max) {
                         $totals = $transaction->total + $bonus->max;
                     } else {
-                        $totals = $transaction->total + $bonust;;
+                        $totals = $transaction->total + $bonust;
                     }
                 } else {
                     $totals =  $transaction->total;
@@ -151,7 +151,7 @@ class DepositController extends Controller
                 if (!empty($bonus)) {
                     $bonust =  $transaction->total * $bonus->bonus / 100;
                     if ($bonust > $bonus->max) {
-                        $totals =  $bonus->max;
+                        $totals =  $transaction->total + $bonus->max;
                     } else {
                         $totals = $transaction->total + $bonust;
                     }

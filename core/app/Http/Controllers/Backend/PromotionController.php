@@ -38,6 +38,7 @@ class PromotionController extends Controller
         $promotion->max_claim = $request->max_claim;
         $promotion->bonus_type = $request->bonus_type;
         $promotion->status = $request->status;
+        $promotion->turnover = $request->to;
         $promotion->type = $request->type;
         $promotion->sequence = $request->sequence;
         $promotion->save();
