@@ -22,7 +22,7 @@
                     <a href="{{ route('promotiond',$promo->slug) }}">
                         <div class="list-item">
                             <div class="item-image">
-                                <img src="{{ $promo->gambar }}" alt="">
+                                <img src="{{ env('AWS_URL') }}{{ $promo->gambar }}" alt="">
                             </div>
                             <div class="item-context">
                                 <h6>{{ $promo->judul }}</h6>
