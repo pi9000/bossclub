@@ -13,112 +13,77 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
-Route::domain(env('BACKEND_URL'))->group(function () {
-    Route::namespace('Backend')->name('admin.')->group(function () {
-        Route::namespace('Auth')->group(function () {
-            Route::controller('LoginController')->group(function () {
-                Route::get('/', 'showLoginForm')->name('login');
-                Route::post('doLogin', 'login')->name('doLogin');
-                Route::get('logout', 'logout')->name('logout');
-            });
-        });
 
-        Route::middleware(['admin'])->group(function () {
-            Route::get('dashboard', 'DashboardController@index')->name('dashboard');
-            Route::get('test-gateway', 'DashboardController@test_gateway')->name('gateway');
-            Route::get('profile', 'ProfileController@index')->name('profile');
-            Route::post('profile/update', 'ProfileController@update')->name('profile.update');
-            Route::get('members', 'MemberController@index')->name('members.list');
-            Route::get('members/turn-over', 'MemberController@turn_over')->name('turnover');
-            Route::post('members/create', 'MemberController@create')->name('member.create');
-            Route::get('members/{extplayer}/details', 'MemberController@details')->name('members.list.details');
-            Route::get('members/{extplayer}/games/{games}', 'MemberController@games')->name('members.list.games');
-            Route::get('members/{extplayer}/status/{status}', 'MemberController@status')->name('members.list.status');
-            Route::post('members/{id}/update', 'MemberController@update')->name('members.list.update');
-            Route::post('members/{id}/update-provider', 'MemberController@provider')->name('members.list.provider');
-            Route::post('members/{extplayer}/bank', 'MemberController@banks')->name('members.list.bank');
-            Route::get('members/balance', 'MemberController@balance')->name('members.balance');
-            Route::post('members/balance/add', 'MemberController@balanceup')->name('members.balance.update');
+Route::namespace('Backend')->prefix('api/bo/v2')->name('admin.')->group(function () {
+    Route::middleware(['api.auth'])->group(function () {
+        Route::post('_get_me_count', 'DashboardController@_get_me_count')->name('dashboard');
+        Route::post('_get_latest', 'DashboardController@_get_latest')->name('_get_latest');
+        Route::post('get_member_total_balance', 'DashboardController@get_member_total_balance')->name('get_member_total_balance');
 
-            Route::get('deposits/pending', 'DepositController@index')->name('deposits.pending');
-            Route::get('deposits/reload', 'DepositController@reload_payment')->name('deposits.reload');
-            Route::get('deposits/bonus-detail/{id}', 'DepositController@bonus_detail')->name('deposits.bonus_detail');
-            Route::get('deposits/transaction', 'DepositController@list')->name('deposits.list');
-            Route::get('deposits/{id}/approve', 'DepositController@approve')->name('deposits.approve');
-            Route::get('deposits/{id}/reject', 'DepositController@reject')->name('deposits.reject');
+        Route::post('account_listing', 'MemberController@account_listing')->name('members.account_listing');
+        Route::post('member_details/{id}', 'MemberController@member_details')->name('members.member_details');
+        Route::post('transaction_history/{id}', 'MemberController@transaction_history')->name('members.transaction_history');
+        Route::post('member_details/{id}/balance', 'MemberController@member_details_balance')->name('members.member_details_balance');
+        Route::post('account_password_edit', 'MemberController@account_password_edit')->name('account_password_edit');
+        Route::post('update_account_listing', 'MemberController@update_account_listing')->name('update_account_listing');
+        Route::post('new_member', 'MemberController@new_member')->name('new_member');
+        Route::post('update_provider', 'MemberController@update_provider')->name('update_provider');
+        Route::post('update_bank_user', 'MemberController@update_bank')->name('update_bank_user');
+        Route::post('update_account_data', 'MemberController@update_data')->name('update_account_data');
+        Route::post('update_data_remark', 'MemberController@update_data_remark')->name('update_data_remark');
 
-            Route::get('banks/account', 'BankController@index')->name('bank.list');
-            Route::get('banks/{id}/edit', 'BankController@edit')->name('bank.edit');
+        Route::post('summary_report', 'ReportController@summary_report')->name('summary_report');
+        Route::post('get_member_summary', 'ReportController@get_member_summary')->name('get_member_summary');
 
-            Route::post('banks/create', 'BankController@create')->name('bank.create');
-            Route::post('banks/{id}/update', 'BankController@update')->name('bank.update');
-            Route::get('banks/{id}/delete', 'BankController@delete')->name('bank.delete');
+        Route::post('agent_promo_settings', 'PromotionController@index')->name('agent_promo_settings');
+        Route::post('agent_promo_settings/create', 'PromotionController@create')->name('agent_promo_settings_create');
+        Route::post('agent_promo_settings/delete', 'PromotionController@delete')->name('agent_promo_settings_delete');
 
-            Route::get('settings/website', 'SettingController@index')->name('settings');
-            Route::get('settings/config-clear', 'SettingController@clear')->name('settings.clear');
-            Route::post('settings/website/update', 'SettingController@update')->name('settings.update');
+        Route::post('transaction/detail/{id}', 'DepositController@get_transaction')->name('transaction.detail');
+        Route::post('transaction/pending', 'DepositController@index')->name('transaction.pending');
+        Route::post('transaction/multiple_reject', 'DepositController@bulkActionReject')->name('transaction.bulkActionReject');
+        Route::post('transaction/multiple_approve', 'DepositController@bulkActionapprove')->name('transaction.bulkActionapprove');
+        Route::post('transaction/approve/{id}', 'DepositController@approve')->name('transaction.approve');
+        Route::post('transaction/reject/{id}', 'DepositController@reject')->name('transaction.reject');
+        Route::post('transaction/transaction_history', 'DepositController@transaction_history')->name('transaction.transaction_history');
 
-            Route::get('settings/promotion', 'PromotionController@index')->name('website.promotion');
-            Route::get('settings/promotion/{id}/edit', 'PromotionController@edit')->name('website.promotion.edit');
+        Route::post('settings/website', 'SettingController@index')->name('settings');
+        Route::post('settings/website/update', 'SettingController@update')->name('settings.update');
+        Route::post('settings/api/update/{id}', 'SettingController@edit_api')->name('settings.api.update');
 
-            Route::get('settings/promotion-deposit', 'PromotionController@deposit')->name('website.deposit');
-            Route::get('settings/promotion-deposit/{id}/edit', 'PromotionController@editd')->name('website.deposit.edit');
+        Route::post('settings/domain_list', 'SettingController@domain_list')->name('settings.domain_list');
+        Route::post('settings/domain/add', 'SettingController@add_domain')->name('settings.domain.add');
+        Route::post('settings/domain/remove/{id}', 'SettingController@domain_remove')->name('settings.domain.remove');
 
-            Route::post('settings/promotion/{id}/update', 'PromotionController@update')->name('website.promotion.update');
-            Route::post('settings/promotion/create', 'PromotionController@create')->name('website.promotion.create');
-            Route::get('settings/promotion/{id}/delete', 'PromotionController@delete')->name('website.promotion.delete');
+        Route::post('settings/sliding_banner', 'SettingController@sliding_banner')->name('settings.sliding_banner');
+        Route::post('settings/sliding_banner/create', 'SettingController@sliding_banner_create')->name('settings.sliding_banner_create');
+        Route::post('settings/sliding_banner/delete/{id}', 'SettingController@sliding_banner_delete')->name('settings.sliding_banner_delete');
 
-            Route::get('settings/banner', 'PromotionController@banner')->name('website.banner');
-            Route::post('settings/banner/create', 'PromotionController@bcreate')->name('website.banner.create');
-            Route::get('settings/banner/{id}/delete', 'PromotionController@bdelete')->name('website.banner.delete');
+        Route::post('banks/account', 'BankController@index')->name('bank.list');
+        Route::post('banks/{id}/edit', 'BankController@edit')->name('bank.edit');
 
-            Route::get('settings/floating', 'PromotionController@float')->name('website.floating');
-            Route::get('settings/floating/{id}/edit', 'PromotionController@floatedit')->name('website.floating.edit');
-            Route::post('settings/floating/{id}/update', 'PromotionController@floatupdate')->name('website.floating.update');
-            Route::post('settings/floating/create', 'PromotionController@floatcreate')->name('website.floating.create');
-            Route::post('settings/popup/update', 'PromotionController@popup')->name('website.floating.popup');
-            Route::get('settings/floating/{id}/delete', 'PromotionController@floatdelete')->name('website.floating.delete');
+        Route::post('banks/create', 'BankController@create')->name('bank.create');
+        Route::post('banks/{id}/update', 'BankController@update')->name('bank.update');
+        Route::post('banks/{id}/delete', 'BankController@delete')->name('bank.delete');
 
-            Route::get('settings/api/setting', 'ProviderController@index')->name('website.api');
-            Route::post('settings/api/edit/{id}', 'ProviderController@edit')->name('website.api.update');
-            Route::get('settings/api/use/{id}', 'ProviderController@use')->name('website.api.use');
+        Route::post('games/call_players', 'ProviderController@call_players')->name('calls.list');
+        Route::post('games/call_list', 'ProviderController@call_list')->name('calls.list');
+        Route::post('games/call_apply', 'ProviderController@call_apply')->name('calls.list');
+        Route::post('games/call_rtp', 'ProviderController@call_rtp')->name('calls.call_rtp');
 
-            Route::get('settings/api/call-manage', 'ProviderController@call')->name('website.call');
-            Route::get('settings/api/call/players', 'ProviderController@call_players')->name('website.call-players');
-            Route::get('settings/api/call/list', 'ProviderController@call_list')->name('website.call_list');
-            Route::get('settings/api/call/apply', 'ProviderController@call_apply')->name('website.call_apply');
-            Route::get('settings/api/call/rtp', 'ProviderController@rtp')->name('website.rtp');
+        Route::post('brand_management', 'SettingController@brand_management')->name('brand_management');
+        Route::post('brand_management/create', 'SettingController@create_brand')->name('create_brand');
+        Route::post('brand_management/{id}/delete', 'SettingController@delete_brand')->name('delete_brand');
 
-            Route::get('admin/app/list', 'AdminController@index')->name('admin.list');
-            Route::get('admin/app/edit/{id}', 'AdminController@edit')->name('admin.list.edit');
-            Route::post('admin/app/create', 'AdminController@create')->name('admin.list.create');
-            Route::post('admin/app/update/{id}', 'AdminController@update')->name('admin.list.update');
-            Route::get('admin/app/delete/{id}', 'AdminController@delete')->name('admin.list.delete');
+        Route::post('provider_list', 'ProviderController@provider_list')->name('provider_list');
+        Route::post('provider_list/update_provider', 'ProviderController@update_provider')->name('provider_list.update');
+        Route::post('provider_list/game_lists/{id}', 'ProviderController@gamelists')->name('provider_list.game_lists');
+        Route::post('provider_list/game_lists/{id}/update', 'ProviderController@update_games')->name('provider_list.update_games');
+    });
 
-            Route::get('withdrawal/pending', 'WithdrawController@index')->name('withdrawal.pending');
-            Route::get('withdrawal/transaction', 'WithdrawController@list')->name('withdrawal.list');
-            Route::get('withdrawal/{id}/approve', 'WithdrawController@approve')->name('withdrawal.approve');
-            Route::get('withdrawal/{id}/reject', 'WithdrawController@reject')->name('withdrawal.reject');
-
-            Route::get('settings/provider/provider_list', 'ProviderController@provider_list')->name('website.provider');
-            Route::post('settings/provider/add', 'ProviderController@update_provider_add')->name('website.provider.add');
-            Route::post('settings/provider/{id}/provider_list_update', 'ProviderController@update_provider')->name('website.provider.update');
-            Route::get('settings/provider/{id}/provider_list_delete', 'ProviderController@delete_provider')->name('website.provider.delete');
-
-            Route::get('settings/provider/{id}/games', 'ProviderController@gamelists')->name('website.provider.games');
-            Route::post('settings/provider/games_list/update', 'ProviderController@update_games')->name('website.provider.games_update');
-
-            Route::get('admin/app/notification', 'AdminController@getNotif')->name('getNotif');
-            Route::get('admin/app/notifications', 'AdminController@getNotifwd')->name('getNotif2');
-
-            Route::get('report/summary', 'DashboardController@reports')->name('reports.summary');
-            Route::get('report/transaction_summary', 'ReportController@transaction_summary')->name('reports.transaction_summary');
-        });
-
-        Route::get('config-clear', function () {
-            Artisan::call('optimize:clear');
-            return back()->with('success', 'Cache clear successfully');
-        });
+    Route::get('config-clear', function () {
+        Artisan::call('optimize:clear');
+        return back()->with('success', 'Cache clear successfully');
     });
 });
 
@@ -191,3 +156,5 @@ Route::namespace('Backend')->name('admin.')->group(function () {
 });
 
 Auth::routes();
+
+
