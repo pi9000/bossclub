@@ -170,9 +170,7 @@ class DepositController extends Controller
 
                 // Tambah saldo
                 if ($transaction->transaksi === 'Top Up') {
-                    if ($transaction->dari_bank === 'Main Balance') {
-                        $user->balance += $transaction->total;
-                    } else {
+                    if ($transaction->dari_bank != 'Main Balance') {
                         $bonusAmount = 0;
 
                         if ($bonus) {
@@ -244,7 +242,7 @@ class DepositController extends Controller
                     }
                 } else {
                     if ($transaction->metode != 'Main Wallet') {
-                       $user->balance += $transaction->total;
+                        $user->balance += $transaction->total;
                     }
                 }
 

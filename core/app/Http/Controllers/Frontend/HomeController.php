@@ -274,6 +274,11 @@ class HomeController extends Controller
             curl_close($ch);
             $result = json_decode($response, true);
             if ($result['ok']) {
+
+                $user = User::find(auth()->user()->id);
+                $user->balance = 0;
+                $user->save();
+
                 $trans = new Transaction();
                 $trans->trx_id = getTrx();
                 $trans->agent_id = auth()->user()->agent_id;
