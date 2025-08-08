@@ -970,7 +970,7 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $wdh->created_at }}</td>
-                                                        <td>{{ $wdh->transaksi }} {{ $wdh->metode == 'Main Wallet' ? $wdh->dari_bank : '' }} {{ $wdh->metode == 'By System' ? $wdh->dari_bank : '' }}</td>
+                                                        <td>{{ $wdh->dari_bank == 'Main Balance' ? $wdh->transaksi . $wdh->keterangan : $wdh->transaksi }} {{ $wdh->metode == 'By System' ? $wdh->dari_bank : $wdh->transaksi }}</td>
                                                         <td>MYR {{ number_format($wdh->total, 2) }}</td>
                                                         <td>
                                                             @if ($wdh->status == 'Pending')
@@ -1093,7 +1093,7 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $wdh->created_at }}</td>
-                                                        <td>{{ $wdh->transaksi }} {{ $wdh->dari_bank == 'Main Balance' ? $wdh->keterangan : '' }} {{ $wdh->metode == 'By System' ? $wdh->dari_bank : '' }}</td>
+                                                        <td>{{ $wdh->dari_bank == 'Main Balance' ? $wdh->transaksi . $wdh->keterangan : $wdh->transaksi }} {{ $wdh->metode == 'By System' ? $wdh->dari_bank : $wdh->transaksi }}</td>
                                                         <td>MYR {{ number_format($wdh->total, 2) }}</td>
                                                         <td>
                                                             @if ($wdh->status == 'Pending')
