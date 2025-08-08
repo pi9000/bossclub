@@ -56,6 +56,7 @@ class SettingController extends Controller
         $web->gateway_endpoint = $request->gateway_endpoint;
         $web->telegram_chat_id = $request->telegram_chat_id;
         $web->costum_script = $request->costum_script;
+        $web->warna = $request->warna;
         $web->save();
         $contact->save();
         return response()->json([
