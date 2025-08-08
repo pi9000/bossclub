@@ -14,6 +14,7 @@ use App\Models\GameHistory;
 use App\Http\Controllers\VerificationController;
 use Carbon\Carbon;
 use App\Http\Controllers\Api\SeamlesWsController;
+use Laravel\Ui\Presets\React;
 use Yajra\DataTables\Facades\DataTables;
 
 class MemberController extends Controller
@@ -327,6 +328,68 @@ class MemberController extends Controller
         $user->save();
 
         return back()->with('success', 'Balance ' . $user->username . ' Successfully update');
+    }
+
+    public function edit_balance(Request $request)
+    {
+        $user = User::where('extplayer', $request->extplayer)->first();
+        if (empty($user)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid User'
+            ]);
+        }
+
+        if ($request->action == 1) {
+            $user->balance = $user->balance + $request->amount;
+
+            $trans = new Transaction();
+            $trans->trx_id = getTrx();
+            $trans->agent_id = $user->agent_id;
+            $trans->transaksi = 'Top Up';
+            $trans->total = $request->amount;
+            $trans->dari_bank = 'Deposit Manual By System';
+            $trans->metode = 'By System';
+            $trans->bonus = 'tanpabonus';
+            $trans->bonus_amount = 0;
+            $trans->keterangan = 'Deposit Manual By System';
+            $trans->status = 'Sukses';
+            $trans->id_user = $user->id;
+            $trans->username = $user->username;
+            $trans->transaction_by = $request->transaction_by;
+            $trans->save();
+        } else {
+            if ($user->balance < $request->amount) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Insufficient Balance'
+                ]);
+            }
+            $user->balance = $user->balance - $request->amount;
+
+            $trans = new Transaction();
+            $trans->trx_id = getTrx();
+            $trans->agent_id = $user->agent_id;
+            $trans->transaksi = 'Withdraw';
+            $trans->total = $request->amount;
+            $trans->dari_bank = 'Withdraw Manual By System';
+            $trans->metode = 'By System';
+            $trans->bonus = 'tanpabonus';
+            $trans->bonus_amount = 0;
+            $trans->keterangan = 'Withdraw Manual By System';
+            $trans->status = 'Sukses';
+            $trans->id_user = $user->id;
+            $trans->username = $user->username;
+            $trans->transaction_by = $request->transaction_by;
+            $trans->save();
+        }
+
+        $user->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Balance for user ' . $user->username . ' successfully updated',
+        ]);
     }
 
     public function update_account_listing(Request $request)

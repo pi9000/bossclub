@@ -31,6 +31,7 @@ Route::namespace('Backend')->prefix('api/bo/v2')->name('admin.')->group(function
         Route::post('update_bank_user', 'MemberController@update_bank')->name('update_bank_user');
         Route::post('update_account_data', 'MemberController@update_data')->name('update_account_data');
         Route::post('update_data_remark', 'MemberController@update_data_remark')->name('update_data_remark');
+        Route::post('update_balance', 'MemberController@edit_balance')->name('update_balance');
 
         Route::post('summary_report', 'ReportController@summary_report')->name('summary_report');
         Route::post('get_member_summary', 'ReportController@get_member_summary')->name('get_member_summary');
