@@ -392,6 +392,19 @@ class MemberController extends Controller
         ]);
     }
 
+
+    public function edit_spin_quota(Request $request)
+    {
+        $user = User::where('extplayer', $request->extplayer)->first();
+        $user->spin_quota += $request->amount;
+        $user->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Spin quota for user ' . $user->username . ' successfully updated',
+        ]);
+    }
+
     public function update_account_listing(Request $request)
     {
         $user = User::where('extplayer', $request->player_id)->first();
