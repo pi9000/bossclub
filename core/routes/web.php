@@ -80,6 +80,11 @@ Route::namespace('Backend')->prefix('api/bo/v2')->name('admin.')->group(function
         Route::post('provider_list/update_provider', 'ProviderController@update_provider')->name('provider_list.update');
         Route::post('provider_list/game_lists/{id}', 'ProviderController@gamelists')->name('provider_list.game_lists');
         Route::post('provider_list/game_lists/{id}/update', 'ProviderController@update_games')->name('provider_list.update_games');
+
+        Route::post('settings/lucky_whell', 'SettingController@lucky_whell_settings')->name('settings.lucky_whell_settings');
+        Route::post('settings/lucky_whell/update', 'SettingController@update_lucky_whell_settings')->name('settings.update_lucky_whell_settings');
+        Route::post('settings/lucky_whell/prize', 'SettingController@luckywheel_prize')->name('settings.luckywheel_prize');
+        Route::post('settings/lucky_whell/luckywheel_prize_delete', 'SettingController@luckywheel_prize_delete')->name('settings.luckywheel_prize_delete');
     });
 
     Route::get('config-clear', function () {
@@ -122,6 +127,12 @@ Route::namespace('Frontend')->group(function () {
     Route::get('backup', 'HomeController@backup')->name('backup');
 
     Route::middleware(['auth'])->group(function () {
+        Route::get('games_luckywheel', 'GameController@luckywheel')->name('luckywheel');
+        Route::get('games_luckywheel_data', 'GameController@getLuckyWheelList')->name('getLuckyWheelList');
+        Route::post('updateResult', 'GameController@update_result')->name('update_result');
+        Route::post('spin/check', 'GameController@spinCheck')->name('lucky_wheel_check');
+        Route::get('startspin', 'GameController@startSpin')->name('lucky_wheel_startSpin');
+
         Route::post('optionalBankCreate', 'HomeController@optionalBankCreate')->name('optionalBankCreate');
         Route::get('profile', 'UserController@profile')->name('profile');
         Route::post('profile/update-password', 'UserController@update')->name('update.password');
@@ -157,5 +168,3 @@ Route::namespace('Backend')->name('admin.')->group(function () {
 });
 
 Auth::routes();
-
-

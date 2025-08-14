@@ -384,7 +384,7 @@
                 $("a[name=spinwheel-play]").on("click", function(event) {
                     event.preventDefault();
                     var win = window.open('', 'spinwheel');
-                    win.location = "{{ env('LUCKYWHEEL_URL') }}";
+                    win.location = "{{ url('games_luckywheel') }}";
                 });
             </script>
         @endauth
@@ -2075,7 +2075,7 @@
                 $("a[name=spinwheel-play]").on("click", function(event) {
                     event.preventDefault();
                     var win = window.open('', 'spinwheel');
-                    win.location = "{{ env('LUCKYWHEEL_URL') }}";
+                    win.location = "{{ url('games_luckywheel') }}";
                 });
             </script>
         @endauth

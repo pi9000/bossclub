@@ -13,6 +13,8 @@ use App\Models\ApiProvider;
 use App\Models\DomainList;
 use App\Models\Banner;
 use App\Models\User;
+use App\Models\LuckySetting;
+use App\Models\LuckyWhell;
 use App\Models\Bonus;
 use Illuminate\Support\Facades\File;
 
@@ -358,6 +360,75 @@ server {
         return response()->json([
             'status' => 'success',
             'message' => 'Brand Successfully deleted',
+        ], 200);
+    }
+
+    public function lucky_whell_settings(Request $request)
+    {
+        $settings = LuckySetting::where('agent_id', $request->agent_id)->first();
+        $prize = LuckyWhell::where('agent_id', $request->agent_id)->get();
+        return response()->json([
+            'status' => 'success',
+            'settings' => $settings,
+            'prize' => $prize,
+        ], 200);
+    }
+
+    public function update_lucky_whell_settings(Request $request)
+    {
+        $settings = LuckySetting::where('agent_id', $request->agent_id)->first();
+        $settings->brand = $request->brand;
+        $settings->title = $request->title;
+        $settings->logo = $request->logo;
+        $settings->favicon = $request->favicon;
+        $settings->spinner = $request->spinner;
+        $settings->background = $request->background;
+        $settings->background_mobile = $request->background_mobile;
+        $settings->gameOverText = $request->gameOverText;
+        $settings->invalidSpinText = $request->invalidSpinText;
+        $settings->introText = $request->introText;
+        $settings->spin_text = $request->spin_text;
+        $settings->history_text = $request->history_text;
+        $settings->prize_text = $request->prize_text;
+        $settings->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Lucky Wheel settings updated successfully',
+        ], 200);
+    }
+
+    public function luckywheel_prize(Request $request)
+    {
+        $prizes = new LuckyWhell();
+        $prizes->agent_id = $request->agent_id;
+        $prizes->title = $request->title;
+        $prizes->probability = $request->probability;
+        $prizes->type = 'image';
+        $prizes->value = $request->image;
+        $prizes->win = $request->win;
+        $prizes->resultText = 'Congratulation !!';
+        $prizes->save();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Lucky Wheel prize updated successfully',
+        ], 200);
+    }
+
+
+    public function luckywheel_prize_delete(Request $request)
+    {
+        $prizes = LuckyWhell::where('id', $request->id)->first();
+        if (empty($prizes)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Lucky Wheel prize not found',
+            ], 404);
+        }
+        $prizes->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Lucky Wheel prize deleted successfully',
         ], 200);
     }
 }

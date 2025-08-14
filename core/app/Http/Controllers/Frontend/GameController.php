@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Provider;
 use App\Models\Result;
+use App\Models\User;
+use App\Models\Transaction;
+use App\Models\LuckySetting;
+use App\Models\LuckyWhell;
 use App\Http\Controllers\Api\SeamlesWsController;
 
 class GameController extends Controller
@@ -234,5 +238,258 @@ class GameController extends Controller
 
         curl_close($curl);
         return json_decode($response);
+    }
+
+        public function luckywheel(Request $request)
+    {
+        $settings = LuckySetting::where('agent_id', general()->agent_id)->first();
+        $prize = LuckyWhell::where('agent_id', general()->agent_id)->get();
+        return view('luckywheel.index', compact('settings', 'prize'));
+    }
+
+    public function getLuckyWheelList(Request $request)
+    {
+        $lucky = LuckyWhell::where('agent_id', general()->agent_id)->orderBy('created_at', 'desc')->get(['probability', 'type', 'value', 'win', 'resultText']);
+        $settings = LuckySetting::where('agent_id', general()->agent_id)->first();
+
+        $prizes = LuckyWhell::where('agent_id', general()->agent_id)->get(['probability', 'type', 'value', 'win', 'resultText'])->toArray();
+
+        $selectedPrize = $this->weightedRandomPrize($prizes);
+
+        $spinIndex = null;
+        foreach ($prizes as $index => $segment) {
+            if ($segment['win'] === $selectedPrize['win']) {
+                $spinIndex = $index + 1;
+                break;
+            }
+        }
+
+        return response()->json([
+            "colorArray" => [
+                "rgb(21 21 21 / 0%)",
+                "rgb(21 21 21 / 0%)"
+            ],
+            "segmentValuesArray" => $lucky,
+            "svgWidth" => 1024,
+            "svgHeight" => 768,
+            "wheelStrokeColor" => "#1a1a1a",
+            "wheelStrokeWidth" => 20,
+            "wheelSize" => 560,
+            "wheelTextOffsetY" => 100,
+            "wheelTextColor" => "#222",
+            "wheelTextSize" => "2.3em",
+            "wheelImageOffsetY" => 10,
+            "wheelImageSize" => 270,
+            "centerCircleSize" => 100,
+            "centerCircleStrokeColor" => "#1a1a1a",
+            "centerCircleStrokeWidth" => 52,
+            "centerCircleFillColor" => "#1A1A1A",
+            "segmentStrokeColor" => "#1a1a1a",
+            "segmentStrokeWidth" => 2,
+            "centerX" => 512,
+            "centerY" => 384,
+            "hasShadows" => true,
+            "numSpins" => 1,
+            "spinDestinationArray" => [$spinIndex],
+            "minSpinDuration" => 5,
+            "gameOverText" => $settings->gameOverText . ' MYR ' . number_format($selectedPrize['win'], 2),
+            "invalidSpinText" => $settings->invalidSpinText,
+            "introText" => $settings->introText,
+            "hasSound" => true,
+            "gameId" => $selectedPrize['win'],
+            "clickToSpin" => false
+        ]);
+    }
+
+    public function spinCheck(Request $request)
+    {
+        $user = User::find(auth()->id());
+
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User not found'
+            ], 200);
+        }
+
+        if ($user->spin_quota <= 0) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'The opportunity to spin is over'
+            ], 200);
+        }
+
+        $prizes = LuckyWhell::where('agent_id', general()->agent_id)->get(['probability', 'type', 'value', 'win', 'resultText'])->toArray();
+
+        $selectedPrize = $this->weightedRandomPrize($prizes);
+
+        $spinIndex = null;
+        foreach ($prizes as $index => $segment) {
+            if ($segment['win'] === $selectedPrize['win']) {
+                $spinIndex = $index + 1;
+                break;
+            }
+        }
+
+        $settings = LuckySetting::where('agent_id', general()->agent_id)->first();
+
+        return response()->json([
+            'status' => 'success',
+            "colorArray" => [
+                "rgb(21 21 21 / 0%)",
+                "rgb(21 21 21 / 0%)"
+            ],
+            "segments" => $prizes,
+            "segmentValuesArray" => $prizes,
+            "svgWidth" => 1024,
+            "svgHeight" => 768,
+            "wheelStrokeColor" => "#1a1a1a",
+            "wheelStrokeWidth" => 20,
+            "wheelSize" => 560,
+            "wheelTextOffsetY" => 100,
+            "wheelTextColor" => "#222",
+            "wheelTextSize" => "2.3em",
+            "wheelImageOffsetY" => 10,
+            "wheelImageSize" => 270,
+            "centerCircleSize" => 100,
+            "centerCircleStrokeColor" => "#1a1a1a",
+            "centerCircleStrokeWidth" => 52,
+            "centerCircleFillColor" => "#1A1A1A",
+            "segmentStrokeColor" => "#1a1a1a",
+            "segmentStrokeWidth" => 2,
+            "centerX" => 512,
+            "centerY" => 384,
+            "hasShadows" => true,
+            "numSpins" => 1,
+            "spinDestinationArray" => [$spinIndex],
+            "minSpinDuration" => 3,
+            "gameOverText" => $settings->gameOverText,
+            "invalidSpinText" => $settings->invalidSpinText,
+            "introText" => $settings->introText,
+            "hasSound" => true,
+            "gameId" => $selectedPrize['win'],
+            "clickToSpin" => false
+        ]);
+    }
+
+    public function startSpin(Request $request)
+    {
+        $prizes = LuckyWhell::where('agent_id', general()->agent_id)->get(['id', 'probability', 'type', 'value', 'win', 'resultText'])->toArray();
+
+        $selectedPrize = $this->weightedRandomPrize($prizes);
+
+        $spinIndex = null;
+        foreach ($prizes as $index => $segment) {
+            if ($segment['win'] === $selectedPrize['win']) {
+                $spinIndex = $index + 1;
+                break;
+            }
+        }
+
+        $user = User::find(auth()->id());
+        if ($user->spin_quota <= 0) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'The opportunity to spin is over'
+            ], 200);
+        }
+        if ($user) {
+            $user->decrement('spin_quota');
+        }
+
+        $settings = LuckySetting::where('agent_id', general()->agent_id)->first();
+
+        return response()->json([
+            'status' => 'success',
+            "colorArray" => [
+                "rgb(21 21 21 / 0%)",
+                "rgb(21 21 21 / 0%)"
+            ],
+            "segments" => $prizes,
+            "segmentValuesArray" => $prizes,
+            "svgWidth" => 1024,
+            "svgHeight" => 768,
+            "wheelStrokeColor" => "#1a1a1a",
+            "wheelStrokeWidth" => 20,
+            "wheelSize" => 560,
+            "wheelTextOffsetY" => 100,
+            "wheelTextColor" => "#222",
+            "wheelTextSize" => "2.3em",
+            "wheelImageOffsetY" => 10,
+            "wheelImageSize" => 270,
+            "centerCircleSize" => 100,
+            "centerCircleStrokeColor" => "#1a1a1a",
+            "centerCircleStrokeWidth" => 52,
+            "centerCircleFillColor" => "#1A1A1A",
+            "segmentStrokeColor" => "#1a1a1a",
+            "segmentStrokeWidth" => 2,
+            "centerX" => 512,
+            "centerY" => 384,
+            "hasShadows" => true,
+            "numSpins" => 1,
+            "spinDestinationArray" => [$spinIndex],
+            "minSpinDuration" => 3,
+            "gameOverText" => $settings->gameOverText,
+            "invalidSpinText" => $settings->invalidSpinText,
+            "introText" => $settings->introText,
+            "hasSound" => true,
+            "gameId" => $selectedPrize['win'],
+            "clickToSpin" => false
+        ]);
+    }
+
+    function weightedRandomPrize($prizes)
+    {
+        $eligiblePrizes = array_filter($prizes, function ($prize) {
+            return $prize['probability'] > 15;
+        });
+
+        if (empty($eligiblePrizes)) {
+            return null;
+        }
+
+        $totalWeight = 0;
+        foreach ($eligiblePrizes as $prize) {
+            $totalWeight += $prize['probability'];
+        }
+
+        $random = mt_rand(1, $totalWeight);
+
+        $currentWeight = 0;
+        foreach ($eligiblePrizes as $prize) {
+            $currentWeight += $prize['probability'];
+            if ($random <= $currentWeight) {
+                return $prize;
+            }
+        }
+    }
+
+    public function update_result(Request $request)
+    {
+        $user = User::where('extplayer', $request->user)->first();
+        if ($user) {
+            $trans = new Transaction();
+            $trans->trx_id = getTrx();
+            $trans->agent_id = $user->agent_id;
+            $trans->transaksi = 'Top Up';
+            $trans->total = $request->prize;
+            $trans->dari_bank = 'Lucky Wheel Prize';
+            $trans->metode = 'By System';
+            $trans->bonus = 'tanpabonus';
+            $trans->bonus_amount = 0;
+            $trans->keterangan = 'Lucky Wheel Prize';
+            $trans->status = 'Sukses';
+            $trans->id_user = $user->id;
+            $trans->username = $user->username;
+            $trans->transaction_by = 'System';
+            $trans->save();
+
+            $user->balance += $request->prize;
+            $user->save();
+
+            return response()->json(['status' => 'success', 'message' => 'Result updated successfully']);
+        }
+
+        return response()->json(['status' => 'error', 'message' => 'User not found']);
     }
 }
