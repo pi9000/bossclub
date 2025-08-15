@@ -889,11 +889,11 @@
                     console.log(e)
                     a.classList.remove("hidden");
                     console.log(e);
-                    if (e.win) {
+                    if (e.gameId) {
                         $.post("/updateResult", {
                             user: "{{ auth()->user()->extplayer }}",
                             _token: token,
-                            prize: e.win
+                            prize: e.gameId
                         });
                     }
                    setTimeout(function() {
