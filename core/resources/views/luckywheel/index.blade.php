@@ -768,7 +768,7 @@
             </div>
         </div>
         <!-- partial -->
-        {{-- <audio src="https://cobawheel.com/uploads/SOUND MJ.mp4" id="my_audio" loop="loop"></audio> --}}
+        <audio src="https://files.linkcdn.site/ls/mjsong.mp4" id="my_audio" loop="loop" ></audio>
         <audio src="{{ asset('themes/front/mzdspin/sound/bonus.mp3') }}" id="bonus" loop="loop"></audio>
         <audio id="congratsAudio" src="{{ asset('themes/front/mzdspin/sound/winning.mp3') }}"></audio>
         <div id="alert" class="hidden">
@@ -814,6 +814,8 @@
             $(function() {
                 $(".wheelContainer, #redeem_container").fadeIn(2000);
                 $("#welcome, .livechat").fadeIn(1000);
+
+                document.getElementById('my_audio').play();
 
                 const baseUrl = window.location.origin;
                 const agentId = "{{ auth()->user()->agent_id }}";
@@ -891,6 +893,7 @@
                             prize: e.win
                         });
                     }
+                    window.location.reload();
                 }
 
                 function myResult2(e) {
