@@ -893,7 +893,9 @@
                             prize: e.win
                         });
                     }
-                    window.location.reload();
+                   setTimeout(function() {
+    location.reload();
+}, 5000);
                 }
 
                 function myResult2(e) {
