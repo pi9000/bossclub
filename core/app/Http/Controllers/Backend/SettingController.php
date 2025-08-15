@@ -178,8 +178,6 @@ class SettingController extends Controller
 
         $nginxConf = "
 server {
-    listen 80;
-    listen [::]:80;
     server_name $domain www.$domain;
 
     root $webRoot;
