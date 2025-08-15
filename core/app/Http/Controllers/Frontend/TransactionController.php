@@ -253,6 +253,11 @@ class TransactionController extends Controller
             $trans->username = auth()->user()->username;
             $trans->save();
 
+
+            $user = User::find(auth()->user()->id);
+            $user->balance -= $request->jumlah;
+            $user->save();
+
             $pusher = [
                 'trans_id' => $trans->id,
                 'username' => auth()->user()->username,
