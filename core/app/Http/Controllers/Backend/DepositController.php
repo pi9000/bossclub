@@ -33,7 +33,7 @@ class DepositController extends Controller
             $query->where('status', $request->status);
         }
 
-        $transactions = $query->where('agent_id', $request->agent_id)->with('user')->with('bonuse')->get();
+        $transactions = $query->where('agent_id', $request->agent_id)->with('user')->with('bonuse')->orderBy('created_at', 'desc')->get();
 
         return response()->json([
             'status' => 'success',
