@@ -840,6 +840,8 @@
                         _token: token
                     });
 
+                    document.getElementById('my_audio').pause();
+
                     let bonusSound = new Audio("{{ asset('themes/front/mzdspin/sound/bonus.mp3') }}"),
                         spinSound = new Audio("{{ asset('themes/front/mzdspin/sound/spins.mp3') }}");
 
@@ -886,6 +888,7 @@
                     t.classList.remove("hidden");
                     console.log(e)
                     a.classList.remove("hidden");
+                    console.log(e);
                     if (e.win) {
                         $.post("/updateResult", {
                             user: "{{ auth()->user()->extplayer }}",
