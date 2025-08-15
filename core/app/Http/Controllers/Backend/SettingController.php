@@ -331,6 +331,26 @@ server {
         $new_reviplay->status = $api_reviplay->status;
         $new_reviplay->save();
 
+
+        $lucky_settings = LuckySetting::first();
+
+        $settings = new LuckySetting();
+        $settings->agent_id = $web->agent_id;
+        $settings->brand = $lucky_settings->brand;
+        $settings->title = $lucky_settings->title;
+        $settings->logo = $lucky_settings->logo;
+        $settings->favicon = $lucky_settings->favicon;
+        $settings->spinner = $lucky_settings->spinner;
+        $settings->background = $lucky_settings->background;
+        $settings->background_mobile = $lucky_settings->background_mobile;
+        $settings->gameOverText = $lucky_settings->gameOverText;
+        $settings->invalidSpinText = $lucky_settings->invalidSpinText;
+        $settings->introText = $lucky_settings->introText;
+        $settings->spin_text = $lucky_settings->spin_text;
+        $settings->history_text = $lucky_settings->history_text;
+        $settings->prize_text = $lucky_settings->prize_text;
+        $settings->save();
+
         return response()->json([
             'status' => 'success',
             'message' => 'Brand Successfully created',
