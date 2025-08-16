@@ -52,7 +52,7 @@ class SettingController extends Controller
         $web->tutorial_register = $request->tutorial_register;
         $web->tutorial_deposit = $request->tutorial_deposit;
         $web->home_footer = $request->home_footer;
-        $web->gateway_merchant = $request->home_footer;
+        $web->gateway_merchant = $request->gateway_merchant;
         $web->gateway_apikey = $request->gateway_apikey;
         $web->gateway_secretkey = $request->gateway_secretkey;
         $web->gateway_endpoint = $request->gateway_endpoint;
