@@ -57,6 +57,7 @@ Route::namespace('Backend')->prefix('api/bo/v2')->name('admin.')->group(function
         Route::post('settings/domain_list', 'SettingController@domain_list')->name('settings.domain_list');
         Route::post('settings/domain/add', 'SettingController@add_domain')->name('settings.domain.add');
         Route::post('settings/domain/remove/{id}', 'SettingController@domain_remove')->name('settings.domain.remove');
+        Route::post('settings/domain/redirect/{id}', 'SettingController@domain_redirect')->name('settings.domain.redirect');
 
         Route::post('settings/sliding_banner', 'SettingController@sliding_banner')->name('settings.sliding_banner');
         Route::post('settings/sliding_banner/create', 'SettingController@sliding_banner_create')->name('settings.sliding_banner_create');

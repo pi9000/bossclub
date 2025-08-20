@@ -449,4 +449,22 @@ server {
             'message' => 'Lucky Wheel prize deleted successfully',
         ], 200);
     }
+
+    public function domain_redirect(Request $request, $id)
+    {
+        $domain = DomainList::where('zone_id', $id)->first();
+        if (!$domain) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Domain not found',
+            ], 404);
+        }
+        $domain->redirect = $request->redirect();
+        $domain->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Domain Successfully redirected',
+        ]);
+    }
 }

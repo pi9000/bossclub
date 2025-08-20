@@ -25,6 +25,10 @@ class DetectWhitelabel
             return response()->json(['error' => 'Settings not found for this domain'], 404);
         }
 
+        if ($whitelabel->redirect != null) {
+            return redirect($whitelabel->redirect);
+        }
+
         $settings = Settings::where('agent_id', $whitelabel->agent_id)->first();
 
         if (empty($settings)) {
