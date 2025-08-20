@@ -397,15 +397,7 @@ class SeamlesWsController extends Controller
                 "msg" => "INVALID_USER"
             ]);
         }
-
-        if ($user->balance <= 0) {
-            return response()->json([
-                "status" => 0,
-                "msg" => "INSUFFICIENT_USER_FUNDS",
-                "user_balance" => 0
-            ]);
-        }
-
+        
         return response()->json([
             "status" => 1,
             "user_balance" => $user->balance
