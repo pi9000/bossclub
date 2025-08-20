@@ -459,7 +459,7 @@ server {
                 'message' => 'Domain not found',
             ], 404);
         }
-        $domain->redirect = $request->redirect();
+        $domain->redirect = $request->input('redirect');
         $domain->save();
 
         return response()->json([
