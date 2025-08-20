@@ -96,7 +96,7 @@ Route::namespace('Backend')->prefix('api/bo/v2')->name('admin.')->group(function
     });
 });
 
-Route::namespace('Frontend')->group(function () {
+Route::namespace('Frontend')->middleware(['whitelabel_check'])->group(function () {
     Route::get('/', 'HomeController@index')->name('index');
     Route::get('register/verify-number', 'HomeController@verify')->name('verify');
     Route::get('resend_code', 'HomeController@resend_code')->name('resend_code');
