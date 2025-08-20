@@ -91,7 +91,7 @@ class SettingController extends Controller
 
     public function domain_list(Request $request)
     {
-        $domains = DomainList::where('agent_id', $request->agent_id)->orderBy('created_at', 'desc')->get();
+        $domains = DomainList::where('agent_id', $request->agent_id)->get();
         return response()->json([
             'status' => 'success',
             'data' => $domains,
