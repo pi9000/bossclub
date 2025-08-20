@@ -38,7 +38,6 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\Http\Middleware\DetectWhitelabel::class,
         ],
 
         'api' => [
@@ -72,5 +71,6 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\RedirectIfNotAdmin::class,
         'admin.guest' => \App\Http\Middleware\RedirectIfAdmin::class,
         'api.auth' => \App\Http\Middleware\VerifyApiKey::class,
+        'whitelabel_check' => \App\Http\Middleware\DetectWhitelabel::class,
     ];
 }
