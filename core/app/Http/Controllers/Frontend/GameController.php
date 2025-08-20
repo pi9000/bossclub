@@ -210,11 +210,10 @@ class GameController extends Controller
 
             $seamlesWsController = new SeamlesWsController();
             $result = $seamlesWsController->huidu_launch_game($user_code, $game_code, $balance);
-            return $result;
             if ($result->code == 0) {
                 return redirect($result->payload->game_launch_url);
             } else {
-                return $result;
+                return back()->with('error', $result->msg);
             }
         }
     }
