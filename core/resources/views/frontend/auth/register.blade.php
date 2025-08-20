@@ -365,19 +365,6 @@
         //     return allowedKey(event, "^[0-9]+$")
         // });
 
-        jQuery.validator.addMethod("validatePhone", function(value, element) {
-            let currency = "IDR"
-            if ($('select[id=bank] :selected').parent().attr('label') != "bank") {
-                if (currency == "IDR" && $("input[name=phone]").val()[0] != 8) {
-                    return false;
-                } else {
-                    return true
-                }
-            } else {
-                return true;
-            }
-        }, "Invalid number, please check your phone number again.");
-
         $("#register-form").validate({
             onkeyup: false,
             rules: {
