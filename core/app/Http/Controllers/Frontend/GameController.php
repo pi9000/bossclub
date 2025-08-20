@@ -214,7 +214,7 @@ class GameController extends Controller
             if ($result->code == 0) {
                 return redirect($result->payload->game_launch_url);
             } else {
-                return back()->with('error', $result->msg);
+                return $result;
             }
         }
     }
