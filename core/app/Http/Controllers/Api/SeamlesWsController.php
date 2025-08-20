@@ -288,7 +288,7 @@ class SeamlesWsController extends Controller
             "hash" => $hash,
         ];
         $result = json_decode($this->curl_post_huidu($params));
-        return $result;
+        return $params;
     }
 
     public function huidu_callback(Request $request)
