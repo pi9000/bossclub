@@ -150,7 +150,7 @@ class SettingController extends Controller
                 'name' => $domain,
                 'content' => '194.233.71.101',
                 'ttl' => 3600,
-                'proxied' => true
+                'proxied' => false
             ]);
 
 
@@ -160,7 +160,7 @@ class SettingController extends Controller
                 'name' => "www.$domain",
                 'content' => '194.233.71.101',
                 'ttl' => 3600,
-                'proxied' => true
+                'proxied' => false
             ]);
 
         $domainList = new DomainList();
